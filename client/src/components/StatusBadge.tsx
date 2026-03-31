@@ -1,8 +1,10 @@
 import { cn } from "@/lib/utils";
 import { CheckCircle2, AlertTriangle, RefreshCw, Activity, Search } from "lucide-react";
 
+type StatusValue = "stable" | "warning" | "critical" | "recovering" | "scanning";
+
 interface StatusBadgeProps {
-  status: "stable" | "warning" | "critical" | "recovering" | "scanning";
+  status: StatusValue | string;
   className?: string;
 }
 
@@ -45,7 +47,7 @@ export function StatusBadge({ status, className }: StatusBadgeProps) {
     },
   };
 
-  const current = config[status] || config.stable;
+  const current = config[status as StatusValue] || config.stable;
   const Icon = current.icon;
 
   return (
