@@ -30,6 +30,15 @@
   
   --radius: 0.25rem;
 
+  /* Card & Popover surfaces */
+  --card: 240 10% 7%;
+  --card-foreground: 180 10% 90%;
+  --card-border: 240 20% 18%;
+
+  --popover: 240 10% 7%;
+  --popover-foreground: 180 10% 90%;
+  --popover-border: 240 20% 18%;
+
   /* Custom Status Colors */
   --status-stable: 150 100% 45%;
   --status-warning: 45 100% 50%;

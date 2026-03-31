@@ -8,6 +8,7 @@ import {
 import { useServices, useResetServices } from "@/hooks/use-services";
 import { StatusBadge } from "@/components/StatusBadge";
 import { CyberCard } from "@/components/CyberCard";
+import { cn } from "@/lib/utils";
 import type { SystemService } from "@shared/schema";
 
 // Map strings to icons
