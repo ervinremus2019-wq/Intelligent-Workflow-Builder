@@ -1,10 +1,9 @@
-modules = ["postgresql-16", "nodejs-20"]
+modules = ["nodejs-20", "web", "postgresql-16"]
 run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["got"]
 
 [[ports]]
 localPort = 5000
@@ -38,7 +37,3 @@ author = "agent"
 task = "shell.exec"
 args = "npm run dev"
 waitForPort = 5000
-
-{ pkgs }: {
-  deps = [ pkgs.nodejs pkgs.python3 pkgs.gcc ];
-}
