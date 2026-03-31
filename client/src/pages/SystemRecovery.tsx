@@ -17,8 +17,7 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   Cloud, Lock, Music, Eye, Home, Users, LayoutGrid, Cpu, Shield, Terminal
 };
 
-// Types derived from schema
-type Status = SystemService["status"];
+type Status = "stable" | "warning" | "critical" | "recovering" | "scanning";
 
 export default function SystemRecovery() {
   const { data: initialServices, isLoading, error } = useServices();
