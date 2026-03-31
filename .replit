@@ -1,16 +1,9 @@
-To build by default and ensure that the runtime step also triggers a full build, you can combine the build and run instructions so that the build process always precedes any run command. Here’s a unified structure:
-
-{ pkgs }: {
-  deps = [ pkgs.nodejs pkgs.python3 pkgs.gcc ];
-}
-
-modules = ["nodejs-20", "postgresql-16"]
-run = ["npm", "run", "build", "&&", "npm", "run", "dev"]
+modules = ["nodejs-20", "web", "postgresql-16"]
+run = "npm run dev"
 hidden = [".config", ".git", "generated-icon.png", "node_modules", "dist"]
 
 [nix]
 channel = "stable-24_05"
-packages = ["got"]
 
 [[ports]]
 localPort = 5000
@@ -21,7 +14,7 @@ PORT = "5000"
 
 [deployment]
 deploymentTarget = "autoscale"
-run = ["npm", "run", "build", "&&", "node", "./dist/index.cjs"]
+run = ["node", "./dist/index.cjs"]
 build = ["npm", "run", "build"]
 
 [workflows]
@@ -42,12 +35,5 @@ author = "agent"
 
 [[workflows.workflow.tasks]]
 task = "shell.exec"
-args = "npm run build && npm run dev"
+args = "npm run dev"
 waitForPort = 5000
-
-This ensures:
-Any run automatically executes a build first.
-Deployment runs with a fresh build.
-The workflow tasks also build before starting dev mode.
-
-All parts are synchronized to build before running by default.
