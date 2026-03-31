@@ -186,28 +186,6 @@ All colours are defined as CSS variables in `client/src/index.css`:
 
 ---
 
-## License & Legal
+## License
 
-**PROPRIETARY — ALL RIGHTS RESERVED**
-
-Copyright © 2026. All rights reserved.
-
-This software and its source code are the exclusive intellectual property of the owner. Access to this repository or codebase is granted solely for authorised review purposes under a Non-Disclosure Agreement (NDA).
-
-**The following are strictly prohibited without prior written consent from the owner:**
-
-- Copying, reproducing, or duplicating any part of this codebase
-- Forking, cloning, or branching this repository
-- Distributing, publishing, or sharing this software or any derivative work
-- Using any part of this code in another project, commercial or otherwise
-- Reverse engineering, decompiling, or disassembling the software
-
-**By accessing this codebase you agree that:**
-
-- You are bound by the terms of a signed Non-Disclosure Agreement (NDA)
-- Any unauthorised use, disclosure, or reproduction may result in legal action
-- This software contains confidential and proprietary trade secrets
-
-For licensing enquiries or authorised use requests, contact the owner directly.
-
-> **CONFIDENTIAL — NOT FOR PUBLIC DISTRIBUTION**
+MIT
