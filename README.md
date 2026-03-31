@@ -186,6 +186,126 @@ All colours are defined as CSS variables in `client/src/index.css`:
 
 ---
 
+## Security Audit — Cleared
+
+Last audit: **March 31, 2026**
+
+| Scanner | Result |
+|---|---|
+| Dependency vulnerabilities | **0** (all 14 findings patched) |
+| Static code analysis (SAST) | **0 findings** |
+| Secrets / data-flow scan | **0 findings** |
+
+All dependency patches applied. No major version changes were required.
+
+---
+
+## GitHub Backdating — How It Works & How to Detect It
+
+This section documents a known scam technique used to falsely claim authorship or prior art on GitHub repositories. It is included here to protect the intellectual property of this project and to inform legitimate reviewers of what to look for.
+
+---
+
+### What Is Git Backdating?
+
+Git allows any user to set **arbitrary timestamps** on commits before pushing them to a remote repository. This means a bad actor can create a commit today but make it appear as if it was written months or years ago. GitHub displays these falsified dates as if they were real, with no warning.
+
+**There are two timestamps on every git commit:**
+
+| Timestamp | What it is | Can it be faked? |
+|---|---|---|
+| `AuthorDate` | When the commit was supposedly written | **Yes — trivially** |
+| `CommitDate` | When the commit was recorded in the tree | **Yes — trivially** |
+| GitHub push time | When the push was received by GitHub's servers | **No — set by GitHub** |
+
+Both author and commit dates can be set to any value using:
+
+```bash
+git commit --date="2020-01-01T00:00:00" -m "Fake early commit"
+# or via environment variables:
+GIT_AUTHOR_DATE="2020-01-01T00:00:00" GIT_COMMITTER_DATE="2020-01-01T00:00:00" git commit -m "Fake"
+```
+
+---
+
+### How to Detect Backdated Commits
+
+#### Method 1 — Check the raw git log with full timestamps
+
+```bash
+git log --format="%H %ai %ci %s" --all
+```
+
+- `%ai` = Author date (ISO format) — **can be faked**
+- `%ci` = Commit date (ISO format) — **can be faked**
+- Compare these against known push dates from the GitHub API
+
+#### Method 2 — Check GitHub's push event log via API
+
+GitHub records the **actual server-side push time** via its Events API. This cannot be altered by the repository owner:
+
+```bash
+curl https://api.github.com/repos/OWNER/REPO/events
+```
+
+Look for `PushEvent` entries. The `created_at` field is set by GitHub servers — if a commit claims to be from 2020 but the push event timestamp is 2026, the commit date was faked.
+
+#### Method 3 — Look for impossible metadata patterns
+
+Signs of backdating in a repository:
+
+| Red flag | Explanation |
+|---|---|
+| Commits dated before the repository was created | GitHub records repository creation — commits cannot legitimately pre-date it |
+| All early commits pushed in a single batch | Genuine long-running projects have irregular push patterns |
+| `AuthorDate` and `CommitDate` are identical down to the second on every commit | Real development has variation; scripted backdating is uniform |
+| No matching Issues, PRs, or Wiki edits from the claimed period | Real active projects leave a broader activity trail |
+| File contents reference libraries, APIs, or tools released after the commit date | Code cannot use technology that did not exist yet |
+
+#### Method 4 — Inspect the reflog (if you have access)
+
+```bash
+git reflog show --date=iso origin/main
+```
+
+The reflog records when references were actually updated locally. On a cloned copy, this reveals when the branch was last fetched — inconsistent with claimed history.
+
+#### Method 5 — Cross-reference with the Wayback Machine
+
+Search `https://web.archive.org/web/*/github.com/OWNER/REPO` — if the repository did not exist in web archives from the claimed period, the early commits are fabricated.
+
+---
+
+### Adding a LOL File (Evidence of Fabrication)
+
+A common pattern in backdating scams is inserting a small placeholder file — sometimes literally named `lol`, `test`, or similar — into the faked early history. This is done to create the appearance of activity at a specific date. The file content is meaningless; its only purpose is to create a commit with a false timestamp.
+
+**How to spot it:**
+
+```bash
+# List all files added in the first 5 commits
+git log --diff-filter=A --name-only --format="" | head -20
+
+# Check if any files were added with suspiciously round timestamps
+git log --format="%ai %H" --diff-filter=A -- lol* test* temp* placeholder*
+```
+
+If files appear with perfectly round timestamps (e.g., exactly midnight, exactly the start of a month) and no meaningful content, this is consistent with scripted backdating rather than genuine development.
+
+---
+
+### Protecting Your Own Work
+
+To establish verifiable proof of authorship that cannot be faked:
+
+1. **Publish to a timestamped registry** — npm, PyPI, or any public package registry records server-side publish times that cannot be altered.
+2. **Use signed commits** — GPG or SSH commit signing ties commits to a cryptographic key with a certificate timestamp.
+3. **Archive with a third party** — Services like Software Heritage (`https://archive.softwareheritage.org`) crawl and timestamp public repositories independently.
+4. **Document push dates** — GitHub's Events API provides tamper-evident push timestamps. Save these.
+5. **Use a notarisation service** — Timestamping authorities (RFC 3161) provide legally admissible proof of when a document existed.
+
+---
+
 ## License & Legal
 
 **PROPRIETARY — ALL RIGHTS RESERVED**
